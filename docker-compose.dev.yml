@@ -1,7 +1,7 @@
 services:
-  schulnetz-api:
+  schulnetz:
     build: .
-    container_name: schulnetz-api
+    container_name: schulnetz
     restart: unless-stopped
     environment:
       PORT: "80"

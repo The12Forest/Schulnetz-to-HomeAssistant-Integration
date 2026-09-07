@@ -14,11 +14,15 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .const import (
+    CONF_CUSTOM_URL,
     CONF_SCAN_INTERVAL_MINUTES,
+    CONF_SCHOOL,
     CONF_TOTP_SECRET,
     DEFAULT_SCAN_INTERVAL_MINUTES,
+    DEFAULT_SCHOOL,
     DOMAIN,
 )
+from .schools import CUSTOM
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -50,6 +54,8 @@ class SchulnetzCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self.email = entry.data[CONF_EMAIL]
         self.password = entry.data[CONF_PASSWORD]
         self.totp_secret = entry.data[CONF_TOTP_SECRET]
+        self.school = entry.data.get(CONF_SCHOOL, DEFAULT_SCHOOL)
+        self.custom_url = entry.data.get(CONF_CUSTOM_URL)
         self.session = async_get_clientsession(hass)
 
         options = entry.options
@@ -103,13 +109,19 @@ class SchulnetzCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     async def async_push_credentials(self) -> None:
         """Push credentials to the node server (used during setup)."""
+        payload: dict[str, Any] = {
+            CONF_EMAIL: self.email,
+            CONF_PASSWORD: self.password,
+            CONF_TOTP_SECRET: self.totp_secret,
+        }
+        if self.school == CUSTOM:
+            payload[CONF_CUSTOM_URL] = self.custom_url
+        else:
+            payload[CONF_SCHOOL] = self.school
+
         async with self.session.post(
             self._url("/api/config"),
-            json={
-                CONF_EMAIL: self.email,
-                CONF_PASSWORD: self.password,
-                CONF_TOTP_SECRET: self.totp_secret,
-            },
+            json=payload,
             timeout=30,
         ) as resp:
             if resp.status != 200:

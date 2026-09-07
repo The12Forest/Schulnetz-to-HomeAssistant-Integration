@@ -6,7 +6,15 @@
         "description": "Connect to the Schulnetz node server.",
         "data": {
           "host": "Host",
-          "port": "Port"
+          "port": "Port",
+          "school": "School"
+        }
+      },
+      "custom_url": {
+        "title": "Custom school link",
+        "description": "Paste the link to your school's Schulnetz page.",
+        "data": {
+          "custom_url": "School URL"
         }
       },
       "credentials": {
@@ -20,7 +28,8 @@
       }
     },
     "error": {
-      "cannot_connect": "Failed to connect to the Schulnetz server"
+      "cannot_connect": "Failed to connect to the Schulnetz server",
+      "invalid_url": "Enter a valid school URL"
     },
     "abort": {
       "already_configured": "This Schulnetz server is already configured"

@@ -1,8 +1,8 @@
 services:
-  schulnetz-api:
-    image: ghcr.io/the12forest/schulnetz-api:latest
+  schulnetz:
+    image: ghcr.io/the12forest/schulnetz-to-ha-integration:latest
     pull_policy: always
-    container_name: schulnetz-api
+    container_name: schulnetz
     restart: unless-stopped
     environment:
       PORT: "80"

@@ -3,7 +3,7 @@
 const { chromium } = require("playwright");
 const { TOTP } = require("totp-generator");
 
-const BASE_URL = process.env.SCHULNETZ_URL || "https://schulnetz.lu.ch/bbzw";
+const DEFAULT_BASE_URL = "https://schulnetz.lu.ch/bbzw";
 
 const cleanVal = (val) => {
   if (val === null || val === undefined) return "---";
@@ -99,16 +99,17 @@ function parseRows(rawRows) {
 
 /**
  * Logs into Schulnetz using the provided credentials and scrapes the grades page.
- * @param {{email: string, password: string, totpSecret: string}} credentials
+ * @param {{email: string, password: string, totpSecret: string, baseUrl?: string}} credentials
  * @returns {Promise<{subjects: Array, updatedAt: string}>}
  */
 async function scrape(credentials) {
-  const { email, password, totpSecret } = credentials;
+  const { email, password, totpSecret, baseUrl } = credentials;
 
   if (!email || !password || !totpSecret) {
     throw new Error("Missing credentials: email, password and totpSecret are required");
   }
 
+  const url = baseUrl || DEFAULT_BASE_URL;
   const { otp } = TOTP.generate(totpSecret);
 
   const browser = await chromium.launch({
@@ -121,7 +122,7 @@ async function scrape(credentials) {
     const page = await browser.newPage();
     page.setDefaultTimeout(30000);
 
-    await page.goto(BASE_URL);
+    await page.goto(url);
 
     await page
       .getByRole("textbox", { name: "Enter your email, phone, or" })

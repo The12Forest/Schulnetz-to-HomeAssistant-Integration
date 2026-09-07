@@ -4,7 +4,7 @@ git pull
 set -euo pipefail
 
 REGISTRY="ghcr.io"
-REPO_NAME="${REPO_NAME:-schulnetz-api}"
+REPO_NAME="${REPO_NAME:-schulnetz-to-ha-integration}"
 
 # ── Check if already logged in to ghcr.io ────────────────────────────────────
 DOCKER_CONFIG="${DOCKER_CONFIG:-${HOME}/.docker}"
