@@ -1,0 +1,231 @@
+[
+  {
+    "subject": "ABSENZ-INA-aus2.SEMESTERSammelgefäss Absenzen",
+    "average": "---",
+    "exams": []
+  },
+  {
+    "subject": "BMDE-E-BMLT25b-MovDeutsch",
+    "average": "---",
+    "exams": [
+      {
+        "date": "14.09.2026",
+        "name": "Prüfung Textanalyse",
+        "note": "---",
+        "weight": "1",
+        "gotPoints": "---",
+        "maxPoints": "---",
+        "classAverage": "---"
+      },
+      {
+        "date": "19.10.2026",
+        "name": "Prüfung Grammatik Verben",
+        "note": "---",
+        "weight": "1",
+        "gotPoints": "---",
+        "maxPoints": "---",
+        "classAverage": "---"
+      },
+      {
+        "date": "07.12.2026",
+        "name": "Abgabe Projektarbeit Medien",
+        "note": "---",
+        "weight": "1.5",
+        "gotPoints": "---",
+        "maxPoints": "---",
+        "classAverage": "---"
+      },
+      {
+        "date": "11.01.2027",
+        "name": "Kurztest Satzbau (zählt für 2.Sem.)",
+        "note": "---",
+        "weight": "0.5",
+        "gotPoints": "---",
+        "maxPoints": "---",
+        "classAverage": "---"
+      }
+    ]
+  },
+  {
+    "subject": "BMEN-E-BMLT25b-SptEnglisch",
+    "average": "5.000",
+    "exams": [
+      {
+        "date": "31.08.2026",
+        "name": "GOLD U3",
+        "note": "Hidden",
+        "weight": "1",
+        "gotPoints": "---",
+        "maxPoints": "---",
+        "classAverage": "Hidden"
+      }
+    ]
+  },
+  {
+    "subject": "BMFR-E-BMLT25b-CimFranzösisch",
+    "average": "---",
+    "exams": [
+      {
+        "date": "07.12.2026",
+        "name": "Examen 3",
+        "note": "---",
+        "weight": "1",
+        "gotPoints": "---",
+        "maxPoints": "---",
+        "classAverage": "---"
+      }
+    ]
+  },
+  {
+    "subject": "BMMA-E-BMLT25b-AekMathematik",
+    "average": "4.600",
+    "exams": [
+      {
+        "date": "24.08.2026",
+        "name": "MA 3.1",
+        "note": "Hidden",
+        "weight": "1",
+        "gotPoints": "Hidden",
+        "maxPoints": "---",
+        "classAverage": "Hidden"
+      }
+    ]
+  },
+  {
+    "subject": "BMNW-E-BMLT25b-LahNaturwissenschaften",
+    "average": "---",
+    "exams": [
+      {
+        "date": "21.09.2026",
+        "name": "Prüfung 1/1",
+        "note": "---",
+        "weight": "1",
+        "gotPoints": "---",
+        "maxPoints": "---",
+        "classAverage": "---"
+      },
+      {
+        "date": "02.11.2026",
+        "name": "Prüfung 1/2",
+        "note": "---",
+        "weight": "1",
+        "gotPoints": "---",
+        "maxPoints": "---",
+        "classAverage": "---"
+      },
+      {
+        "date": "14.12.2026",
+        "name": "Prüfung 1/3",
+        "note": "---",
+        "weight": "1",
+        "gotPoints": "---",
+        "maxPoints": "---",
+        "classAverage": "---"
+      }
+    ]
+  },
+  {
+    "subject": "M114-S-INA25aL-Las114 Codierungs-, Kompressions- und Verschlüsselungsverfahren einsetzen",
+    "average": "---",
+    "exams": [
+      {
+        "date": "25.09.2026",
+        "name": "M114. Grundlagen",
+        "note": "---",
+        "weight": "1",
+        "gotPoints": "---",
+        "maxPoints": "---",
+        "classAverage": "---"
+      },
+      {
+        "date": "06.11.2026",
+        "name": "M114. Kompression",
+        "note": "---",
+        "weight": "1",
+        "gotPoints": "---",
+        "maxPoints": "---",
+        "classAverage": "---"
+      },
+      {
+        "date": "18.12.2026",
+        "name": "M114. Verschlüsselung",
+        "note": "---",
+        "weight": "1",
+        "gotPoints": "---",
+        "maxPoints": "---",
+        "classAverage": "---"
+      }
+    ]
+  },
+  {
+    "subject": "M254-S-INA25aL-Jen254 Geschäftsproz. im eig. Berufsumfeld beschreiben",
+    "average": "---",
+    "exams": []
+  },
+  {
+    "subject": "M320-S-INA25aL-Bur320 objektorientiert programmieren",
+    "average": "---",
+    "exams": [
+      {
+        "date": "25.09.2026",
+        "name": "Prüfung 1",
+        "note": "---",
+        "weight": "1",
+        "gotPoints": "---",
+        "maxPoints": "---",
+        "classAverage": "---"
+      },
+      {
+        "date": "27.11.2026",
+        "name": "Prüfung 2",
+        "note": "---",
+        "weight": "1",
+        "gotPoints": "---",
+        "maxPoints": "---",
+        "classAverage": "---"
+      },
+      {
+        "date": "08.01.2027",
+        "name": "Prüfung 3",
+        "note": "---",
+        "weight": "1",
+        "gotPoints": "---",
+        "maxPoints": "---",
+        "classAverage": "---"
+      }
+    ]
+  },
+  {
+    "subject": "M346-S-INA25aL-Bur346 Cloud Lösungen konzipieren u. realisieren",
+    "average": "---",
+    "exams": [
+      {
+        "date": "18.09.2026",
+        "name": "Theorie",
+        "note": "---",
+        "weight": "1",
+        "gotPoints": "---",
+        "maxPoints": "---",
+        "classAverage": "---"
+      },
+      {
+        "date": "13.11.2026",
+        "name": "Technologie",
+        "note": "---",
+        "weight": "1",
+        "gotPoints": "---",
+        "maxPoints": "---",
+        "classAverage": "---"
+      },
+      {
+        "date": "08.01.2027",
+        "name": "Vertiefung",
+        "note": "---",
+        "weight": "1",
+        "gotPoints": "---",
+        "maxPoints": "---",
+        "classAverage": "---"
+      }
+    ]
+  }
+]
