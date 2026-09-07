@@ -16,9 +16,9 @@ function buildSchoolUrl(school) {
 function envCredentials() {
   const email = process.env.SCHULNETZ_EMAIL || "";
   const password = process.env.SCHULNETZ_PASSWORD || "";
-  const totpSecret = process.env.SCHULNETZ_TOTP_SECRET || "";
-  if (email && password && totpSecret) {
-    return { email, password, totpSecret, source: "env" };
+  const totp_secret = process.env.SCHULNETZ_TOTP_SECRET || "";
+  if (email && password && totp_secret) {
+    return { email, password, totp_secret, source: "env" };
   }
   return null;
 }
@@ -37,7 +37,7 @@ function readStored() {
   try {
     const raw = fs.readFileSync(CONFIG_FILE, "utf-8");
     const data = JSON.parse(raw);
-    if (data.email && data.password && data.totpSecret) {
+    if (data.email && data.password && data.totp_secret) {
       return { ...data, source: "stored" };
     }
   } catch {
@@ -51,9 +51,9 @@ function writeStored(credentials) {
   const payload = {
     email: credentials.email,
     password: credentials.password,
-    totpSecret: credentials.totpSecret,
+    totp_secret: credentials.totp_secret,
     school: credentials.school || null,
-    customUrl: credentials.customUrl || null,
+    custom_url: credentials.custom_url || null,
     updatedAt: new Date().toISOString(),
   };
   fs.writeFileSync(CONFIG_FILE, JSON.stringify(payload, null, 2), {
@@ -66,7 +66,7 @@ function writeStored(credentials) {
  * Resolve the effective base URL. Precedence:
  *   1. env SCHULNETZ_URL (full URL)
  *   2. env SCHULNETZ_SCHOOL (code)
- *   3. stored customUrl
+ *   3. stored custom_url
  *   4. stored school (code)
  *   5. default school (bbzw)
  */
@@ -76,8 +76,8 @@ function resolveBaseUrl() {
     return fromEnv;
   }
   const stored = readStored();
-  if (stored && stored.customUrl) {
-    return stored.customUrl;
+  if (stored && stored.custom_url) {
+    return stored.custom_url;
   }
   if (stored && stored.school) {
     return buildSchoolUrl(stored.school);
@@ -99,7 +99,7 @@ function getCredentials() {
   return {
     email: creds.email,
     password: creds.password,
-    totpSecret: creds.totpSecret,
+    totp_secret: creds.totp_secret,
     baseUrl: resolveBaseUrl(),
     source: creds.source,
   };
@@ -120,7 +120,11 @@ function configStatus() {
     configured: Boolean(env || stored),
     source: env ? "env" : stored ? "stored" : null,
     email: env ? env.email : stored ? stored.email : null,
-    school: env ? (process.env.SCHULNETZ_SCHOOL || null) : stored ? (stored.school || null) : null,
+    school: env
+      ? process.env.SCHULNETZ_SCHOOL || null
+      : stored
+        ? stored.school || null
+        : null,
     baseUrl: resolveBaseUrl(),
   };
 }

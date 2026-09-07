@@ -99,18 +99,18 @@ function parseRows(rawRows) {
 
 /**
  * Logs into Schulnetz using the provided credentials and scrapes the grades page.
- * @param {{email: string, password: string, totpSecret: string, baseUrl?: string}} credentials
+ * @param {{email: string, password: string, totp_secret: string, baseUrl?: string}} credentials
  * @returns {Promise<{subjects: Array, updatedAt: string}>}
  */
 async function scrape(credentials) {
-  const { email, password, totpSecret, baseUrl } = credentials;
+  const { email, password, totp_secret, baseUrl } = credentials;
 
-  if (!email || !password || !totpSecret) {
-    throw new Error("Missing credentials: email, password and totpSecret are required");
+  if (!email || !password || !totp_secret) {
+    throw new Error("Missing credentials: email, password and totp_secret are required");
   }
 
   const url = baseUrl || DEFAULT_BASE_URL;
-  const { otp } = TOTP.generate(totpSecret);
+  const { otp } = TOTP.generate(totp_secret);
 
   const browser = await chromium.launch({
     headless: true,

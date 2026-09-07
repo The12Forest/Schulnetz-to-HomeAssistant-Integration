@@ -119,13 +119,19 @@ const server = http.createServer(async (req, res) => {
       } catch {
         return sendJson(res, 400, { error: "Invalid JSON body" });
       }
-      const { email, password, totpSecret, school, customUrl } = parsed;
-      if (!email || !password || !totpSecret) {
+      const { email, password, totp_secret, school, custom_url } = parsed;
+      if (!email || !password || !totp_secret) {
         return sendJson(res, 400, {
-          error: "email, password and totpSecret are required",
+          error: "email, password and totp_secret are required",
         });
       }
-      configStore.setCredentials({ email, password, totpSecret, school, customUrl });
+      configStore.setCredentials({
+        email,
+        password,
+        totp_secret,
+        school,
+        custom_url,
+      });
       return sendJson(res, 200, configStore.configStatus());
     }
 
