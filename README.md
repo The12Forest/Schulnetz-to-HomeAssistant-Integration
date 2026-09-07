@@ -41,7 +41,7 @@ server. It listens on internal port **80** by default (change via `PORT`).
 # docker-compose.prod.yml
 services:
   schulnetz:
-    image: ghcr.io/the12forest/schulnetz-to-ha-integration:latest
+    image: ghcr.io/the12forest/schulnetz-to-homeassistant-integration:latest
     pull_policy: always
     restart: unless-stopped
     environment:
@@ -74,7 +74,7 @@ docker run -d \
   --name schulnetz \
   -p 80:80 \
   -v schulnetz-data:/app/data \
-  ghcr.io/the12forest/schulnetz-to-ha-integration:latest
+  ghcr.io/the12forest/schulnetz-to-homeassistant-integration:latest
 ```
 
 ### Environment variables
