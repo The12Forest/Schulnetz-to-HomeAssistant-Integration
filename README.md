@@ -115,18 +115,52 @@ docker run -d \
 > The school is fixed at install time. To switch schools later, delete and
 > re-add the integration.
 
+### Sensors
+
+Each subject is a **device**. Under it you get:
+
+- an **average** sensor (`… Durchschnitt`) with the subject's current average,
+- per test/exam:
+  - the **grade** (`note`),
+  - the **date** (a real date entity),
+  - the **weight** (`Gewichtung`),
+  - the achieved **points** (`Punkte`),
+  - the **class average** (`Klassenschnitt`),
+  - the **max points** (`Max. Punkte`), only if the portal shows them.
+
+All numeric values are real numbers. Pending (not yet graded) exams show
+"unknown" and carry a `pending` boolean attribute you can use in automations.
+
 ### Naming scheme
 
 In the integration **Options** you can configure:
 
 - **Refresh interval** (minutes) — how often Home Assistant triggers a scrape.
-- **Subject naming template** — default `{full}` (the raw name). Available
-  placeholders: `{full}`, `{first}`, `{last}`, `{seg1}` … `{segN}` (dash-separated
-  segments), `{alias}`. Example: `{seg1} {last}`.
-- **Exam naming template** — default `{exam}`. Placeholders: `{subject}`,
-  `{exam}`, `{date}`, plus all subject placeholders.
-- **Subject aliases** — one per line in the form `raw = alias` to override the
-  template for specific subjects.
+
+- **Subject naming template** — how a subject is named. Default `{full}` (the
+  raw name). Available placeholders:
+
+  | Placeholder | Meaning                                        |
+  | ----------- | ---------------------------------------------- |
+  | `{full}`    | The raw subject string, e.g. `BMDE-E-BMLT25b-MovDeutsch` |
+  | `{first}`   | First dash-separated segment (`BMDE`)          |
+  | `{last}`    | Last dash-separated segment (`MovDeutsch`)     |
+  | `{seg1}`…`{segN}` | Individual dash-separated segments      |
+  | `{alias}`   | The alias you set below, if any               |
+
+  Example: `{seg1} {last}` → `BMDE MovDeutsch`.
+
+- **Exam naming template** — how a test/exam is named. Default `{exam}` (the
+  test's name). Placeholders: `{subject}` (the subject's display name),
+  `{exam}` (test name), `{date}`, plus all subject placeholders.
+
+- **Subject aliases** — one per line in the form `raw = alias`, to override the
+  template for specific subjects. Example:
+
+  ```
+  BMDE-E-BMLT25b-MovDeutsch = Deutsch
+  M320-S-INA25aL-Bur320 objektorientiert programmieren = Programmieren
+  ```
 
 ## HTTP API
 

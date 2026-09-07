@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import logging
+import re
+from datetime import date
 from typing import Any
 
-from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
@@ -25,6 +27,13 @@ from .naming import exam_display_name, parse_aliases, subject_display_name
 
 _LOGGER = logging.getLogger(__name__)
 
+# (scraper json key, unique_id suffix, German display label)
+_EXAM_VALUE_SENSORS: list[tuple[str, str, str]] = [
+    ("weight", "weight", "Gewichtung"),
+    ("gotPoints", "got_points", "Punkte"),
+    ("classAverage", "class_average", "Klassenschnitt"),
+]
+
 
 def _to_float(value: Any) -> float | None:
     try:
@@ -36,6 +45,21 @@ def _to_float(value: Any) -> float | None:
 def _is_pending(note: Any) -> bool:
     value = str(note).strip().lower()
     return note is None or value in ("---", "hidden", "note hidden", "")
+
+
+def _parse_date(raw: Any) -> date | None:
+    if not raw:
+        return None
+    match = re.match(r"(\d{1,2})\.(\d{1,2})\.(\d{2,4})", str(raw).strip())
+    if not match:
+        return None
+    day, month, year = (int(match.group(i)) for i in (1, 2, 3))
+    if year < 100:
+        year += 2000
+    try:
+        return date(year, month, day)
+    except ValueError:
+        return None
 
 
 async def async_setup_entry(
@@ -83,8 +107,9 @@ async def async_setup_entry(
                 aliases,
                 exam_template,
             )
+
             entities.append(
-                SchulnetzExamSensor(
+                SchulnetzGradeSensor(
                     coordinator,
                     entry.entry_id,
                     raw,
@@ -94,6 +119,47 @@ async def async_setup_entry(
                     device_info,
                 )
             )
+            entities.append(
+                SchulnetzExamDateSensor(
+                    coordinator,
+                    entry.entry_id,
+                    raw,
+                    exam_date,
+                    exam_name,
+                    exam_display,
+                    device_info,
+                )
+            )
+            for json_key, uid_suffix, label in _EXAM_VALUE_SENSORS:
+                entities.append(
+                    SchulnetzExamValueSensor(
+                        coordinator,
+                        entry.entry_id,
+                        raw,
+                        exam_date,
+                        exam_name,
+                        exam_display,
+                        device_info,
+                        json_key,
+                        uid_suffix,
+                        label,
+                    )
+                )
+            if _to_float(exam.get("maxPoints")) is not None:
+                entities.append(
+                    SchulnetzExamValueSensor(
+                        coordinator,
+                        entry.entry_id,
+                        raw,
+                        exam_date,
+                        exam_name,
+                        exam_display,
+                        device_info,
+                        "maxPoints",
+                        "max_points",
+                        "Max. Punkte",
+                    )
+                )
 
     async_add_entities(entities)
 
@@ -135,6 +201,36 @@ class _SchulnetzSensor(SensorEntity):
         self.async_write_ha_state()
 
 
+class _SchulnetzExamSensor(_SchulnetzSensor):
+    def __init__(
+        self,
+        coordinator: SchulnetzCoordinator,
+        entry_id: str,
+        raw_subject: str,
+        exam_date: str,
+        exam_name: str,
+        exam_display: str,
+        device_info: DeviceInfo,
+    ) -> None:
+        super().__init__(coordinator, entry_id, raw_subject, device_info)
+        self._exam_date = exam_date
+        self._exam_name = exam_name
+        key = slugify(f"{exam_date} {exam_name}")
+        self._base_unique_id = f"schulnetz_{slugify(raw_subject)}_{key}"
+
+    def _find_exam(self) -> dict[str, Any] | None:
+        subject = self._find_subject()
+        if subject is None:
+            return None
+        for exam in subject.get("exams", []):
+            if (
+                exam.get("date") == self._exam_date
+                and exam.get("name") == self._exam_name
+            ):
+                return exam
+        return None
+
+
 class SchulnetzAverageSensor(_SchulnetzSensor):
     def __init__(
         self,
@@ -169,7 +265,7 @@ class SchulnetzAverageSensor(_SchulnetzSensor):
         }
 
 
-class SchulnetzExamSensor(_SchulnetzSensor):
+class SchulnetzGradeSensor(_SchulnetzExamSensor):
     def __init__(
         self,
         coordinator: SchulnetzCoordinator,
@@ -180,37 +276,21 @@ class SchulnetzExamSensor(_SchulnetzSensor):
         exam_display: str,
         device_info: DeviceInfo,
     ) -> None:
-        super().__init__(coordinator, entry_id, raw_subject, device_info)
-        self._exam_date = exam_date
-        self._exam_name = exam_name
-        key = slugify(f"{exam_date} {exam_name}")
-        self._attr_unique_id = f"schulnetz_{slugify(raw_subject)}_{key}"
+        super().__init__(
+            coordinator, entry_id, raw_subject, exam_date, exam_name, exam_display, device_info
+        )
+        self._attr_unique_id = f"{self._base_unique_id}_grade"
         self._attr_name = exam_display
 
-    def _find_exam(self) -> dict[str, Any] | None:
-        subject = self._find_subject()
-        if subject is None:
-            return None
-        for exam in subject.get("exams", []):
-            if (
-                exam.get("date") == self._exam_date
-                and exam.get("name") == self._exam_name
-            ):
-                return exam
-        return None
-
     @property
-    def state(self) -> str:
+    def native_value(self) -> float | None:
         exam = self._find_exam()
         if exam is None:
-            return "unknown"
+            return None
         note = exam.get("note")
         if _is_pending(note):
-            return "offen"
-        value = _to_float(note)
-        if value is None:
-            return "offen"
-        return f"{value:g}"
+            return None
+        return _to_float(note)
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
@@ -218,15 +298,66 @@ class SchulnetzExamSensor(_SchulnetzSensor):
         if exam is None:
             return {}
         note = exam.get("note")
-        pending = _is_pending(note)
         return {
             "name": exam.get("name"),
             "date": exam.get("date"),
-            "weight": exam.get("weight"),
-            "got_points": exam.get("got_points"),
-            "max_points": exam.get("max_points"),
-            "class_average": exam.get("class_average"),
             "note": note,
-            "pending": pending,
+            "pending": _is_pending(note),
             "subject": self._raw_subject,
         }
+
+
+class SchulnetzExamDateSensor(_SchulnetzExamSensor):
+    _attr_device_class = SensorDeviceClass.DATE
+
+    def __init__(
+        self,
+        coordinator: SchulnetzCoordinator,
+        entry_id: str,
+        raw_subject: str,
+        exam_date: str,
+        exam_name: str,
+        exam_display: str,
+        device_info: DeviceInfo,
+    ) -> None:
+        super().__init__(
+            coordinator, entry_id, raw_subject, exam_date, exam_name, exam_display, device_info
+        )
+        self._attr_unique_id = f"{self._base_unique_id}_date"
+        self._attr_name = f"{exam_display} Datum"
+
+    @property
+    def native_value(self) -> date | None:
+        exam = self._find_exam()
+        if exam is None:
+            return None
+        return _parse_date(exam.get("date"))
+
+
+class SchulnetzExamValueSensor(_SchulnetzExamSensor):
+    def __init__(
+        self,
+        coordinator: SchulnetzCoordinator,
+        entry_id: str,
+        raw_subject: str,
+        exam_date: str,
+        exam_name: str,
+        exam_display: str,
+        device_info: DeviceInfo,
+        json_key: str,
+        uid_suffix: str,
+        label: str,
+    ) -> None:
+        super().__init__(
+            coordinator, entry_id, raw_subject, exam_date, exam_name, exam_display, device_info
+        )
+        self._json_key = json_key
+        self._attr_unique_id = f"{self._base_unique_id}_{uid_suffix}"
+        self._attr_name = f"{exam_display} {label}"
+
+    @property
+    def native_value(self) -> float | None:
+        exam = self._find_exam()
+        if exam is None:
+            return None
+        return _to_float(exam.get(self._json_key))

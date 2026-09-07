@@ -40,7 +40,8 @@ def structural_hash(data: dict[str, Any] | None) -> str:
         raw = subject.get("subject", "")
         keys.append(raw)
         for exam in subject.get("exams", []):
-            keys.append(f"{raw}|{exam.get('date', '')}|{exam.get('name', '')}")
+            has_max = 1 if exam.get("maxPoints") else 0
+            keys.append(f"{raw}|{exam.get('date', '')}|{exam.get('name', '')}|{has_max}")
     return "|".join(sorted(keys))
 
 

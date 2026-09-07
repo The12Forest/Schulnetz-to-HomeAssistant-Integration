@@ -41,9 +41,9 @@
         "title": "Schulnetz options",
         "data": {
           "scan_interval_minutes": "Refresh interval (minutes)",
-          "device_name_template": "Subject naming template ({full}, {seg1}, {seg2}, {last}, ...)",
-          "exam_name_template": "Exam naming template ({subject}, {exam}, {date}, ...)",
-          "subject_aliases": "Subject aliases (one per line: raw = alias)"
+          "device_name_template": "Subject naming template",
+          "exam_name_template": "Exam naming template",
+          "subject_aliases": "Subject aliases"
         }
       }
     }

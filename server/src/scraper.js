@@ -33,6 +33,33 @@ const ignoredLabels = [
   "bestätigen",
 ];
 
+/**
+ * Extract achieved/max points from a note cell. Supports:
+ *   "Punkte: 13.5"        -> got 13.5, max null
+ *   "Punkte: 13.5/20"     -> got 13.5, max 20
+ *   "13.5 von 20"         -> got 13.5, max 20
+ */
+function extractPoints(rawNote) {
+  if (!rawNote) {
+    return { got: "---", max: null };
+  }
+  let m = rawNote.match(/punkte:\s*([\d.,]+)(?:\s*\/\s*([\d.,]+))?/i);
+  if (m) {
+    return {
+      got: m[1].replace(",", "."),
+      max: m[2] ? m[2].replace(",", ".") : null,
+    };
+  }
+  m = rawNote.match(/([\d.,]+)\s*von\s*([\d.,]+)/i);
+  if (m) {
+    return {
+      got: m[1].replace(",", "."),
+      max: m[2].replace(",", "."),
+    };
+  }
+  return { got: "---", max: null };
+}
+
 function parseRows(rawRows) {
   const structuredData = [];
   let currentSubject = null;
@@ -53,10 +80,7 @@ function parseRows(rawRows) {
       if (currentSubject) {
         const rawNote = row[3] || "";
 
-        const pointsMatch = rawNote.match(/punkte:\s*([\d.,]+)/i);
-        const gotPoints = pointsMatch
-          ? pointsMatch[1].replace(",", ".")
-          : "---";
+        const points = extractPoints(rawNote);
 
         const noteMatch = rawNote.match(/^([\d.,]+)/);
         const note = noteMatch ? noteMatch[1].replace(",", ".") : cleanVal(row[3]);
@@ -72,8 +96,8 @@ function parseRows(rawRows) {
           name: cleanVal(row[2]),
           note,
           weight: cleanVal(row[4]),
-          gotPoints,
-          maxPoints: "---",
+          gotPoints: points.got,
+          maxPoints: points.max,
           classAverage,
         });
       }
