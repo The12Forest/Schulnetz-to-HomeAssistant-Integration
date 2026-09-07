@@ -110,7 +110,7 @@ async function scrape(credentials) {
   }
 
   const url = baseUrl || DEFAULT_BASE_URL;
-  const { otp } = TOTP.generate(totp_secret);
+  const { otp } = await TOTP.generate(totp_secret);
 
   const browser = await chromium.launch({
     headless: true,
