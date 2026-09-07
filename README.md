@@ -25,7 +25,7 @@ Schulnetz  ──Playwright──►  Node server (Docker)  ──plain HTTP─�
 
 Add this repository to HACS as a custom integration, then install **Schulnetz**.
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=The12Forest&repository=schulnetz-to-ha-integration&category=integration)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=The12Forest&repository=Schulnetz-to-HomeAssistant-Integration&category=integration)
 
 > The custom integration lives in `custom_components/schulnetz`. The Node
 > server is **not** installed by HACS — run it as a Docker container (below).
