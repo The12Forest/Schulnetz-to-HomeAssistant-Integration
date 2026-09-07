@@ -1,0 +1,17 @@
+.git
+.gitignore
+node_modules
+server/node_modules
+browser
+playwright-report
+test-results
+blob-report
+playwright
+custom_components
+.github
+.vscode
+*.md
+hacs.json
+docker-compose*.yml
+generate_image.sh
+shell.nix

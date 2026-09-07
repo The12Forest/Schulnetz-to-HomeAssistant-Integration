@@ -1,0 +1,15 @@
+{
+  "name": "schulnetz-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plain-HTTP bridge that scrapes Schulnetz marks/tests via Playwright for Home Assistant",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "playwright": "1.63.0",
+    "totp-generator": "^2.0.1"
+  }
+}

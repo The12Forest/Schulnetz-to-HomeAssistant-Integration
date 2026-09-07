@@ -1,0 +1,21 @@
+services:
+  schulnetz-api:
+    image: ghcr.io/the12forest/schulnetz-api:latest
+    pull_policy: always
+    container_name: schulnetz-api
+    restart: unless-stopped
+    environment:
+      PORT: "80"
+      # Credentials. If set here they override any credentials saved via the
+      # Home Assistant config flow (env vars are persistent by nature).
+      # SCHULNETZ_EMAIL: "you@example.com"
+      # SCHULNETZ_PASSWORD: "your-password"
+      # SCHULNETZ_TOTP_SECRET: "your-totp-secret"
+      # MIN_SCRAPE_INTERVAL_MS: "600000"
+    ports:
+      - "80:80"
+    volumes:
+      - schulnetz-data:/app/data
+
+volumes:
+  schulnetz-data:

@@ -1,0 +1,11 @@
+{
+  "domain": "schulnetz",
+  "name": "Schulnetz",
+  "codeowners": ["@The12Forest"],
+  "config_flow": true,
+  "documentation": "https://github.com/The12Forest/schulnetz-api",
+  "issue_tracker": "https://github.com/The12Forest/schulnetz-api/issues",
+  "iot_class": "local_polling",
+  "version": "1.0.0",
+  "requirements": []
+}
